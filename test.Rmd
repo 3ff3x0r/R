@@ -1,0 +1,62 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+# Load the shiny package
+library(shiny)
+
+# Define the user interface
+ui <- fluidPage(
+  # App title
+  titlePanel("Dynamic Dashboard Example"),
+  
+  # Sidebar layout with input and output
+  sidebarLayout(
+    sidebarPanel(
+      # Input: Slider for selecting a number
+      sliderInput("num", "Choose a number:",
+                  min = 1, max = 100, value = 30)
+    ),
+    
+    # Main panel to display the output
+    mainPanel(
+      # Output: Display the square of the number
+      textOutput("square"),
+      plotOutput("plot")
+    )
+  )
+)
+
+# Define the server logic
+server <- function(input, output) {
+  # Calculate the square of the number
+  output$square <- renderText({
+    paste("The square of", input$num, "is", input$num^2)
+  })
+  
+  # Plot a histogram of random normal data based on the input value
+  output$plot <- renderPlot({
+    hist(rnorm(input$num), main = "Histogram of Random Normal Data",
+         xlab = "Values", col = "lightblue", border = "black")
+  })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
